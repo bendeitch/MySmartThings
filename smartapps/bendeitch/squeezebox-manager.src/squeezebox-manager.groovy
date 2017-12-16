@@ -75,6 +75,7 @@ def createServerDevice(dni) {
 
 def initialize() {
 	unschedule()
+    unsubscribe()
 	initializeServer()
     initializePlayers()
     scheduleServerStatus()
@@ -94,22 +95,33 @@ def initializePlayers() {
 	def hub = location.hubs[0].id
     
     def serverHostAddress = "${serverIP}:${serverPort}"
-    
-    state.connectedPlayers?.each({
-    	def player = getChildDevice(it.mac)
-       	if (!player) {
-		    def playerName = deviceNameSuffix ? "${it.name} ${deviceNameSuffix}" : it.name
-			player = addChildDevice(
-            	"bendeitch", 
-                "Squeezebox Player", 
-                it.mac, 
-                hub,
-                ["name": playerName, "label": playerName]
-            )
-			player.configure(serverHostAddress, it.mac)
-        }
-    })
 
+	def selected = state.connectedPlayers?.findAll { selectedPlayers.contains(it.name) }
+    def unselected = state.connectedPlayers?.findAll { !selected.contains(it) }
+
+	// add players that have been newly selected
+    selected?.each {
+	    	def player = getChildDevice(it.mac)
+    	   	if (!player) {
+			    def playerName = deviceNameSuffix ? "${it.name} ${deviceNameSuffix}" : it.name
+				player = addChildDevice(
+            		"bendeitch", 
+                	"Squeezebox Player", 
+                	it.mac, 
+                	hub,
+                	["name": playerName, "label": playerName]
+            	)
+				player.configure(serverHostAddress, it.mac)
+	        }
+    	}
+    
+    // delete any child devices no longer selected
+    unselected?.each {
+	    def player = getChildDevice(it.mac)
+    	if (player) {
+        	deleteChildDevice(it.mac)
+        }
+    }
 }
 
 def scheduleServerStatus() {
