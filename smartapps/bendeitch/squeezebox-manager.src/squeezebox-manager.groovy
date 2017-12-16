@@ -227,11 +227,11 @@ def processServerMessage(msg) {
 def processServerStatus(msg) {
 
   // extract the player name, ID (MAC) and power state for all players connected to Squeezebox Server
-  def connectedPlayers = msg.result.players_loop.collect({[
+  def connectedPlayers = msg.result.players_loop.collect {[
     name: it.name,
     mac: it.playerid,
     power: it.power
-  ]})
+  ]}
 
   // hold the currently connected players in state
   state.connectedPlayers = connectedPlayers
@@ -248,7 +248,7 @@ def getServerStatus() {
 def updatePlayers() {
 
   // iterate over connected players to update their status
-  state.connectedPlayers?.each({
+  state.connectedPlayers?.each {
     
     // look to see if we have a device for the player
     def player = getChildDevice(it.mac)
@@ -258,7 +258,7 @@ def updatePlayers() {
     if (player && (it.power == "1" || player.updatePower(it.power))) {
       sendCommand([it.mac, ["status", "-", 1, "tags:abcl"]])
     }
-  })
+  }
 }
 
 /*******************
