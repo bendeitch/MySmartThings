@@ -7,152 +7,156 @@
 
 metadata {
 
-	definition (name: "Squeezebox Player", namespace: "bendeitch", author: "Ben Deitch") {
-		capability "Actuator"
-		capability "Music Player"
-		capability "Refresh"
-		capability "Sensor"
-		capability "Switch"
+  definition (name: "Squeezebox Player", namespace: "bendeitch", author: "Ben Deitch") {
+    capability "Actuator"
+    capability "Music Player"
+    capability "Refresh"
+    capability "Sensor"
+    capability "Switch"
 
-		attribute "serverHostAddress", "string"
-        attribute "playerMAC", "string"
+    attribute "serverHostAddress", "string"
+    attribute "playerMAC", "string"
 
-		command "playFavorite"
-        command "fav1"
-        command "fav2"
-        command "fav3"
-        command "fav4"
-        command "fav5"
-        command "fav6"
-}
+    command "playFavorite"
+    command "fav1"
+    command "fav2"
+    command "fav3"
+    command "fav4"
+    command "fav5"
+    command "fav6"
+  }
 
-	tiles {
-		standardTile("onOff", "device.switch", canChangeIcon: true) {
-			state "off", label: 'OFF', action: "switch.on", icon: "st.Electronics.electronics16", backgroundColor: "#ffffff", nextState: "turningOn"
-			state "turningOn", label: 'TURNING ON', icon: "st.Electronics.electronics16", backgroundColor: "#00a0dc", nextState: "on"
-			state "on", label: 'ON', action: "switch.off", icon: "st.Electronics.electronics16", backgroundColor: "#00a0dc", nextState: "turningOff"
-			state "turningOff", label: 'TURNING OFF', icon: "st.Electronics.electronics16", backgroundColor: "#ffffff", nextState: "off"
-		}
-    	standardTile("mute", "device.mute", decoration: "flat") {
-	        state "unmuted", label:'', icon:'st.custom.sonos.unmuted', action:'music Player.mute', nextState: "muted"
-    	    state "muted", label:'', icon:'st.custom.sonos.muted', action:'music Player.unmute', nextState: "unmuted"
-    	}
-    	controlTile("volume", "device.level", "slider", range:"(0..100)") {
-        	state "level", action:"music Player.setLevel"
-    	}
-    	standardTile("playpause", "device.status", decoration: "flat") {
-	        state "paused", label:'', icon:'st.sonos.play-btn', action:'music Player.play'
-    	    state "playing", label:'', icon:'st.sonos.pause-btn', action:'music Player.pause'
-    	}
-	    standardTile("stop", "device.stop", decoration: "flat") {
-    	    state "default", label:'', action:"music Player.stop", icon:"st.sonos.stop-btn"
-    	}
-	    standardTile("prev", "device.switch", decoration: "flat") {
-    	    state "default", label:'', action:"music Player.previousTrack", icon:"st.sonos.previous-btn"
-    	}
-    	standardTile("next", "device.switch", decoration: "flat") {
-        	state "default", label:'', action:"music Player.nextTrack", icon:"st.sonos.next-btn"
-    	}
-        valueTile("trackDescription", "device.trackDescription", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-	    standardTile("fav1", "device.switch", decoration: "flat") {
-    	    state "default", label:'1', action:"fav1"
-    	}
-	    standardTile("fav2", "device.switch", decoration: "flat") {
-    	    state "default", label:'2', action:"fav2"
-    	}
-	    standardTile("fav3", "device.switch", decoration: "flat") {
-    	    state "default", label:'3', action:"fav3"
-    	}
-	    standardTile("fav4", "device.switch", decoration: "flat") {
-    	    state "default", label:'4', action:"fav4"
-    	}
-	    standardTile("fav5", "device.switch", decoration: "flat") {
-    	    state "default", label:'5', action:"fav5"
-    	}
-	    standardTile("fav6", "device.switch", decoration: "flat") {
-    	    state "default", label:'6', action:"fav6"
-    	}
-		main "onOff"
-		details (["onOff", "mute", "volume", "trackDescription", "prev", "playpause", "next", "fav1", "fav2", "fav3", "fav4", "fav5", "fav6"])
-	}
+  tiles {
+    standardTile("onOff", "device.switch", canChangeIcon: true) {
+      state "off", label: 'OFF', action: "switch.on", icon: "st.Electronics.electronics16", backgroundColor: "#ffffff", nextState: "turningOn"
+      state "turningOn", label: 'TURNING ON', icon: "st.Electronics.electronics16", backgroundColor: "#00a0dc", nextState: "on"
+      state "on", label: 'ON', action: "switch.off", icon: "st.Electronics.electronics16", backgroundColor: "#00a0dc", nextState: "turningOff"
+      state "turningOff", label: 'TURNING OFF', icon: "st.Electronics.electronics16", backgroundColor: "#ffffff", nextState: "off"
+    }
+    standardTile("mute", "device.mute", decoration: "flat") {
+      state "unmuted", label:'', icon:'st.custom.sonos.unmuted', action:'music Player.mute', nextState: "muted"
+      state "muted", label:'', icon:'st.custom.sonos.muted', action:'music Player.unmute', nextState: "unmuted"
+    }
+    controlTile("volume", "device.level", "slider", range:"(0..100)") {
+      state "level", action:"music Player.setLevel"
+    }
+    standardTile("playpause", "device.status", decoration: "flat") {
+      state "paused", label:'', icon:'st.sonos.play-btn', action:'music Player.play'
+      state "playing", label:'', icon:'st.sonos.pause-btn', action:'music Player.pause'
+    }
+    standardTile("stop", "device.stop", decoration: "flat") {
+      state "default", label:'', action:"music Player.stop", icon:"st.sonos.stop-btn"
+    }
+    standardTile("prev", "device.switch", decoration: "flat") {
+      state "default", label:'', action:"music Player.previousTrack", icon:"st.sonos.previous-btn"
+    }
+    standardTile("next", "device.switch", decoration: "flat") {
+      state "default", label:'', action:"music Player.nextTrack", icon:"st.sonos.next-btn"
+    }
+    valueTile("trackDescription", "device.trackDescription", decoration: "flat", width: 3, height: 1) {
+      state "default", label:'${currentValue}'
+    }
+    standardTile("fav1", "device.switch", decoration: "flat") {
+      state "default", label:'1', action:"fav1"
+    }
+    standardTile("fav2", "device.switch", decoration: "flat") {
+      state "default", label:'2', action:"fav2"
+    }
+    standardTile("fav3", "device.switch", decoration: "flat") {
+      state "default", label:'3', action:"fav3"
+    }
+    standardTile("fav4", "device.switch", decoration: "flat") {
+      state "default", label:'4', action:"fav4"
+    }
+    standardTile("fav5", "device.switch", decoration: "flat") {
+      state "default", label:'5', action:"fav5"
+    }
+    standardTile("fav6", "device.switch", decoration: "flat") {
+      state "default", label:'6', action:"fav6"
+    }
+    main "onOff"
+    details (["onOff", "mute", "volume", "trackDescription", "prev", "playpause", "next", "fav1", "fav2", "fav3", "fav4", "fav5", "fav6"])
+  }
 }
 
 def configure(serverHostAddress, playerMAC) {
-	state.serverHostAddress = serverHostAddress
-    sendEvent(name: "serverHostAddress", value: state.serverHostAddress, displayed: false, isStateChange: true)
-	state.playerMAC = playerMAC
-    sendEvent(name: "playerMAC", value: state.playerMAC, displayed: false, isStateChange: true)
+
+  state.serverHostAddress = serverHostAddress
+  sendEvent(name: "serverHostAddress", value: state.serverHostAddress, displayed: false, isStateChange: true)
+
+  state.playerMAC = playerMAC
+  sendEvent(name: "playerMAC", value: state.playerMAC, displayed: false, isStateChange: true)
 }
 
 def processJsonMessage(msg) {
 
-	log.debug "Squeezebox Player Message [${device.name}]: ${msg}"
+  log.debug "Squeezebox Player Message [${device.name}]: ${msg}"
 
-	def command = msg.params[1][0]
+  def command = msg.params[1][0]
 
-    switch (command) {
-    	case "status":
-        	processStatus(msg)
-    }
+  switch (command) {
+    case "status":
+      processStatus(msg)
+  }
 }
 
 def processStatus(msg) {
 
-	updatePower(msg.result?.get("power"))
-    updateVolume(msg.result?.get("mixer volume"))
-    updatePlayPause(msg.result?.get("mode"))
+  updatePower(msg.result?.get("power"))
+  updateVolume(msg.result?.get("mixer volume"))
+  updatePlayPause(msg.result?.get("mode"))
     
-    def trackDetails = msg.result?.playlist_loop?.get(0)
-    String track
-    if (trackDetails) {
-    	track = trackDetails.artist ? "${trackDetails.title} by ${trackDetails.artist}" : trackDetails.title
-    }
-	updateTrackDescription(track)
+  def trackDetails = msg.result?.playlist_loop?.get(0)
+  String track
+  if (trackDetails) {
+    track = trackDetails.artist ? "${trackDetails.title} by ${trackDetails.artist}" : trackDetails.title
+  }
+  updateTrackDescription(track)
 }
 
 def updatePower(onOff) {
 
-	String current = device.currentValue("switch")
-	String onOffString = String.valueOf(onOff) == "1" ? "on" : "off"
+  String current = device.currentValue("switch")
+  String onOffString = String.valueOf(onOff) == "1" ? "on" : "off"
 
-	if (current != onOffString) {
-		log.debug "Squeezebox Player [${device.name}]: updating power: ${current} -> ${onOffString}"
-		sendEvent(name: "switch", value: onOffString, displayed: false)
-        return true
-    } else {
-    	return false
-    }
+  if (current != onOffString) {
+
+    log.debug "Squeezebox Player [${device.name}]: updating power: ${current} -> ${onOffString}"
+    sendEvent(name: "switch", value: onOffString, displayed: false)
+    return true
+ 
+  } else {
+    return false
+  }
 }
 
 def updateVolume(volume) {
-	String absVolume = Math.abs(Integer.valueOf(volume)).toString()
-	sendEvent(name: "level", value: absVolume, displayed: false)
+  String absVolume = Math.abs(Integer.valueOf(volume)).toString()
+  sendEvent(name: "level", value: absVolume, displayed: false)
 }
 
 def updatePlayPause(playpause) {
 
-	String status
-    switch (playpause) {
-    	case "play":
-        	status = "playing"
-            break
-        case "pause":
-        	status = "paused"
-            break
-        case "stop":
-        	status = "stopped"
-            break
-        default:
-        	status = playpause
-    }
+  String status
+  switch (playpause) {
+    case "play":
+      status = "playing"
+      break
+    case "pause":
+      status = "paused"
+      break
+    case "stop":
+      status = "stopped"
+      break
+    default:
+      status = playpause
+  }
 
-    sendEvent(name: "status", value: status, displayed: false)
+  sendEvent(name: "status", value: status, displayed: false)
 }
 
 def updateTrackDescription(trackDescription) {
-	sendEvent(name: "trackDescription", value: trackDescription, displayed: false)
+  sendEvent(name: "trackDescription", value: trackDescription, displayed: false)
 }
 /************
  * Commands *
@@ -160,74 +164,74 @@ def updateTrackDescription(trackDescription) {
 
 //--- Power
 def on() {
-	log.debug "Executing 'on'"
-	buildAction(["power", 1])
+  log.debug "Executing 'on'"
+  buildAction(["power", 1])
 }
 def off() {
-	log.debug "Executing 'off'"
-	buildAction(["power", 0])
+  log.debug "Executing 'off'"
+  buildAction(["power", 0])
 }
 
 //--- Volume
 def setLevel(level) {
-	log.debug "Executing 'setLevel'"
-	buildAction(["mixer", "volume", level])
+  log.debug "Executing 'setLevel'"
+  buildAction(["mixer", "volume", level])
 }
 def mute() {
-	log.debug "Executing 'mute'"
-	buildAction(["mixer", "muting", 1])
+  log.debug "Executing 'mute'"
+  buildAction(["mixer", "muting", 1])
 }
 def unmute() {
-	log.debug "Executing 'unmute'"
-	buildAction(["mixer", "muting", 0])
+  log.debug "Executing 'unmute'"
+  buildAction(["mixer", "muting", 0])
 }
 
 //--- Playback
 def setPlaybackStatus() {
-	log.debug "Executing 'setPlaybackStatus'"
-	// TODO: handle 'setPlaybackStatus' command
+  log.debug "Executing 'setPlaybackStatus'"
+  // TODO: handle 'setPlaybackStatus' command
 }
 def play() {
-	log.debug "Executing 'play'"
-	buildAction(["play"])
+  log.debug "Executing 'play'"
+  buildAction(["play"])
 }
 def pause() {
-	log.debug "Executing 'pause'"
-	buildAction(["pause"])
+  log.debug "Executing 'pause'"
+  buildAction(["pause"])
 }
 def stop() {
-	log.debug "Executing 'stop'"
-	buildAction(["stop"])
+  log.debug "Executing 'stop'"
+  buildAction(["stop"])
 }
 def nextTrack() {
-	log.debug "Executing 'nextTrack'"
-	buildAction(["playlist", "jump", "+1"])
+  log.debug "Executing 'nextTrack'"
+  buildAction(["playlist", "jump", "+1"])
 }
 def previousTrack() {
-	log.debug "Executing 'previousTrack'"
-	buildAction(["playlist", "jump", "-1"])
+  log.debug "Executing 'previousTrack'"
+  buildAction(["playlist", "jump", "-1"])
 }
 def playTrack(trackToPlay) {
-	log.debug "Executing 'playTrack'"
-	// TODO: handle 'playTrack' command
+  log.debug "Executing 'playTrack'"
+  // TODO: handle 'playTrack' command
 }
 def setTrack(trackToSet) {
-	log.debug "Executing 'setTrack'"
-	// TODO: handle 'setTrack' command
+  log.debug "Executing 'setTrack'"
+  // TODO: handle 'setTrack' command
 }
 def resumeTrack(trackToResume) {
-	log.debug "Executing 'resumeTrack'"
-	// TODO: handle 'resumeTrack' command
+  log.debug "Executing 'resumeTrack'"
+  // TODO: handle 'resumeTrack' command
 }
 def restoreTrack(trackToRestore) {
-	log.debug "Executing 'restoreTrack'"
-	// TODO: handle 'restoreTrack' command
+  log.debug "Executing 'restoreTrack'"
+  // TODO: handle 'restoreTrack' command
 }
 
 //--- Favorites
 def playFavorite(index) {
-	log.debug "Playing favorite ${index}"
-    buildAction(["favorites", "playlist", "play", "item_id:${index - 1}"])
+  log.debug "Playing favorite ${index}"
+  buildAction(["favorites", "playlist", "play", "item_id:${index - 1}"])
 }
 
 def fav1() { playFavorite(1) }
@@ -241,37 +245,37 @@ def fav6() { playFavorite(6) }
  * Utility Methods *
  *******************/
  
- def buildAction(params) {
- 	
-    def method = "POST"
+def buildAction(params) {
+   
+  def method = "POST"
     
-    def headers = [:]
-	headers.put("HOST", state.serverHostAddress)
-	headers.put("Content-Type", "text/plain")
+  def headers = [:]
+  headers.put("HOST", state.serverHostAddress)
+  headers.put("Content-Type", "text/plain")
     
-    def path = "/jsonrpc.js"
+  def path = "/jsonrpc.js"
     
-    def body = buildJsonRequest(params)
+  def body = buildJsonRequest(params)
   
- 	def action = new physicalgraph.device.HubAction(
-    	method: method,
-        headers: headers,
-    	path: path,
-    	body: body
-	)
+  def action = new physicalgraph.device.HubAction(
+    method: method,
+    headers: headers,
+    path: path,
+    body: body
+  )
 
-    action
- }
+  action
+}
  
- def buildJsonRequest(params) {
+def buildJsonRequest(params) {
  
- 	def request = [
-    	id: 1,
-        method: "slim.request",
-        params: [state.playerMAC, params]
-    ]
+  def request = [
+    id: 1,
+    method: "slim.request",
+    params: [state.playerMAC, params]
+  ]
     
- 	def json = new groovy.json.JsonBuilder(request)
-    log.debug json
-    json
+  def json = new groovy.json.JsonBuilder(request)
+
+  json
 }
