@@ -25,11 +25,14 @@ preferences {
 }
 
 def playersPage() {
-  
+
+  // initialize the server to create the very light child device used to receive HTTP responses from the Squeezebox Server
   initializeServer()
+  // send the server status request so that the connectedPlayers property can be populated from the response
   getServerStatus()
-    
+  
   def playerNames = connectedPlayerNames()
+  // once we have some players then stop refreshing the page so that we don't reset user selections on refresh
   def playerRefreshInterval = playerNames?.isEmpty() ? 2 : null
     
   dynamicPage(name: "playersPage", refreshInterval: playerRefreshInterval) {
@@ -55,6 +58,7 @@ def updated() {
 }
 
 def getServerDni() {
+  // calculate the hex version of the server IP and port to use as the Squeezebox Server child device DNI so that it receives HTTP responses
   String serverHex = "${serverIP}".tokenize('.')*.toInteger().asType(byte[]).encodeHex()
   String portHex = Integer.toHexString("${serverPort}".toInteger())
   return (serverHex + ":" + portHex).toUpperCase()
@@ -70,6 +74,7 @@ def createServerDevice(dni) {
     componentLabel: "Squeezebox Server"
   ]
 
+  // create very simple child device that receives HTTP responses from Squeezebox Server and passes them back to this manager app
   addChildDevice("bendeitch", "Squeezebox Server", dni, hub, prefs)
 }
 
@@ -86,6 +91,7 @@ def initializeServer() {
   def serverDni = getServerDni()
   def serverDevice = getChildDevice(serverDni)
   if (!serverDevice) {
+    // don't bother creating the server device again if it already exists
     serverDevice = createServerDevice(serverDni)
   }
 }
@@ -96,10 +102,11 @@ def initializePlayers() {
     
   def serverHostAddress = "${serverIP}:${serverPort}"
 
+  // build selected and unselected lists by comparing the selected names to the connectedPlayers state property
   def selected = state.connectedPlayers?.findAll { selectedPlayers.contains(it.name) }
   def unselected = state.connectedPlayers?.findAll { !selected.contains(it) }
 
-  // add players that have been newly selected
+  // add devices for players that have been newly selected
   selected?.each {
     def player = getChildDevice(it.mac)
     if (!player) {
@@ -107,7 +114,7 @@ def initializePlayers() {
       player = addChildDevice(
         "bendeitch", 
         "Squeezebox Player", 
-        it.mac, 
+        it.mac, // use the MAC address as the DNI to allow easy retrieval of player devices based on ID (MAC) returned by Squeezebox Server
         hub,
         ["name": playerName, "label": playerName]
       )
@@ -115,7 +122,7 @@ def initializePlayers() {
     }
   }
     
-  // delete any child devices no longer selected
+  // delete any child devices for players that are no longer selected
   unselected?.each {
     def player = getChildDevice(it.mac)
     if (player) {
@@ -124,6 +131,7 @@ def initializePlayers() {
   }
 }
 
+// unsatisfyingly ugly way of getting hub to poll Squeezebox Server every 2 seconds :-(
 def scheduleServerStatus() {
   schedule("0 * * * * ?", getServerStatus0) 
   schedule("2 * * * * ?", getServerStatus2) 
@@ -188,11 +196,15 @@ def getServerStatus54() { getServerStatus() }
 def getServerStatus56() { getServerStatus() }
 def getServerStatus58() { getServerStatus() }
 
+// method invoked by the Squeezebox Server child device to process received messages
 def processJsonMessage(msg) {
+
   def playerId = msg.params[0]
   if (playerId == "") {
+  	// if no playerId in message params then it must be a general server message
     processServerMessage(msg)
   } else {
+  	// otherwise retrieve the child device via the player's MAC address and pass the message to it for processing
     def player = getChildDevice(playerId)
     if (player) {
       player.processJsonMessage(msg)
@@ -201,8 +213,11 @@ def processJsonMessage(msg) {
 }
 
 def processServerMessage(msg) {
+
+  // extract the server command from the message
   def command = msg.params[1][0]
 
+  // process the command
   switch (command) {
     case "serverstatus":
       processServerStatus(msg)
@@ -211,24 +226,35 @@ def processServerMessage(msg) {
 
 def processServerStatus(msg) {
 
+  // extract the player name, ID (MAC) and power state for all players connected to Squeezebox Server
   def connectedPlayers = msg.result.players_loop.collect({[
     name: it.name,
-      mac: it.playerid,
-      power: it.power
+    mac: it.playerid,
+    power: it.power
   ]})
 
+  // hold the currently connected players in state
   state.connectedPlayers = connectedPlayers
-    
+   
+  // update the player devices
   updatePlayers()
 }
 
 def getServerStatus() {
+  // send the command that instructs Squeezebox Server to give high level status info on all connected players
   sendCommand(["", ["serverstatus", 0, 99]])
 }
 
 def updatePlayers() {
+
+  // iterate over connected players to update their status
   state.connectedPlayers?.each({
+    
+    // look to see if we have a device for the player
     def player = getChildDevice(it.mac)
+
+    // if we have then, if it is switched on, get detailed status information to update it with; otherwise, just update its
+    // power state to save spamming the server with constant requests for updates for players that aren't even switched on
     if (player && (it.power == "1" || player.updatePower(it.power))) {
       sendCommand([it.mac, ["status", "-", 1, "tags:abcl"]])
     }
@@ -244,6 +270,7 @@ def updatePlayers() {
    sendHubCommand(buildAction(params))
  }
  
+ // build the action request to send to Squeezebox Server via the LAN
  def buildAction(params) {
    
   def method = "POST"
@@ -266,6 +293,7 @@ def updatePlayers() {
   action
  }
  
+ // build the JSON content for the Squeezebox Server request
  def buildJsonRequest(params) {
  
   def request = [
