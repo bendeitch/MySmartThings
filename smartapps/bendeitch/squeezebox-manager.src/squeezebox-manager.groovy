@@ -201,10 +201,10 @@ def processJsonMessage(msg) {
 
   def playerId = msg.params[0]
   if (playerId == "") {
-  	// if no playerId in message params then it must be a general server message
+    // if no playerId in message params then it must be a general server message
     processServerMessage(msg)
   } else {
-  	// otherwise retrieve the child device via the player's MAC address and pass the message to it for processing
+    // otherwise retrieve the child device via the player's MAC address and pass the message to it for processing
     def player = getChildDevice(playerId)
     if (player) {
       player.processJsonMessage(msg)
