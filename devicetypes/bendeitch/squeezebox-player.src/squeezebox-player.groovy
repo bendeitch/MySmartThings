@@ -17,13 +17,15 @@ metadata {
     attribute "serverHostAddress", "string"
     attribute "playerMAC", "string"
 
-    command "playFavorite"
+    command "playFavorite", ["number"]
     command "fav1"
     command "fav2"
     command "fav3"
     command "fav4"
     command "fav5"
     command "fav6"
+    command "playTrackAndResume", ["string", "number", "number"]
+    command "playTrackAndRestore", ["string", "number", "number"]
   }
 
   tiles {
@@ -227,7 +229,21 @@ def restoreTrack(trackToRestore) {
   log.debug "Executing 'restoreTrack'"
   // TODO: handle 'restoreTrack' command
 }
-
+def playTrackAndResume(uri, duration) {
+    playUri(uri)
+}
+def playTrackAndResume(uri, duration, volume) {
+    playUri(uri)
+}
+def playTrackAndRestore(uri, duration) {
+    playUri(uri)
+}
+def playTrackAndRestore(uri, duration, volume) {
+    playUri(uri)
+}
+def playUri(uri) {
+	buildAction(["playlist", "play", uri])
+}
 //--- Favorites
 def playFavorite(index) {
   log.debug "Playing favorite ${index}"
@@ -264,6 +280,8 @@ def buildAction(params) {
     body: body
   )
 
+  log.debug "ACTION: ${action}"
+  
   action
 }
  
