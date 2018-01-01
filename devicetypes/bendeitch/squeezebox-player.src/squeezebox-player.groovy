@@ -26,6 +26,7 @@ metadata {
     command "fav6"
     command "playTrackAndResume", ["string", "number", "number"]
     command "playTrackAndRestore", ["string", "number", "number"]
+    command "playTrackAtVolume", ["string","number"]
   }
 
   tiles {
@@ -213,10 +214,6 @@ def previousTrack() {
   log.debug "Executing 'previousTrack'"
   buildAction(["playlist", "jump", "-1"])
 }
-def playTrack(trackToPlay) {
-  log.debug "Executing 'playTrack'"
-  // TODO: handle 'playTrack' command
-}
 def setTrack(trackToSet) {
   log.debug "Executing 'setTrack'"
   // TODO: handle 'setTrack' command
@@ -229,20 +226,35 @@ def restoreTrack(trackToRestore) {
   log.debug "Executing 'restoreTrack'"
   // TODO: handle 'restoreTrack' command
 }
+def playTrack(trackToPlay) {
+  log.debug "Executing 'playTrack'"
+  playUri(trackToPlay)
+}
+def playTrackAtVolume(uri, volume) {
+  log.debug "Executing 'playTrackAtVolume'"
+  def actions = [setLevel(volume), playUri(uri)]
+  actions
+}
 def playTrackAndResume(uri, duration) {
-    playUri(uri)
+  log.debug "Executing 'playTrackAndResume'"
+  playUri(uri)
 }
 def playTrackAndResume(uri, duration, volume) {
-    playUri(uri)
+  log.debug "Executing 'playTrackAndResume'"
+  def actions = [setLevel(volume), playUri(uri)]
+  actions
 }
 def playTrackAndRestore(uri, duration) {
-    playUri(uri)
+  log.debug "Executing 'playTrackAndRestore"
+  playUri(uri)
 }
 def playTrackAndRestore(uri, duration, volume) {
-    playUri(uri)
+  log.debug "Executing 'playTrackAndRestore"
+  def actions = [setLevel(volume), playUri(uri)]
+  actions
 }
 def playUri(uri) {
-	buildAction(["playlist", "play", uri])
+  buildAction(["playlist", "play", uri])
 }
 //--- Favorites
 def playFavorite(index) {
