@@ -16,9 +16,12 @@ metadata {
 	definition (name: "Virtual Presence Sensor", namespace: "bendeitch", author: "bob") {
 		capability "Presence Sensor"
 		capability "Sensor"
+        capability "Switch"
 
 		command "arrived"
 		command "departed"
+        command "on"
+        command "off"
 	}
 
 	simulator {
@@ -47,8 +50,15 @@ def arrived() {
 	sendEvent(name: "presence", value: "present")
 }
 
-
 def departed() {
 	log.trace "Executing 'departed'"
 	sendEvent(name: "presence", value: "not present")
+}
+
+def on() {
+	arrived()
+}
+
+def off() {
+	departed()
 }
