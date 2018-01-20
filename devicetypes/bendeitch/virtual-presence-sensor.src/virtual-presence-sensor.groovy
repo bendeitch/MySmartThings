@@ -14,6 +14,7 @@
 metadata {
 	// Automatically generated. Make future change here.
 	definition (name: "Virtual Presence Sensor", namespace: "bendeitch", author: "bob") {
+    	capability "Actuator"
 		capability "Presence Sensor"
 		capability "Sensor"
         capability "Switch"
