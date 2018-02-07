@@ -125,7 +125,7 @@ def updatePower(onOff) {
   if (current != onOffString) {
 
     log.debug "Squeezebox Player [${device.name}]: updating power: ${current} -> ${onOffString}"
-    sendEvent(name: "switch", value: onOffString, displayed: false)
+    sendEvent(name: "switch", value: onOffString, displayed: true)
     return true
  
   } else {
@@ -135,7 +135,7 @@ def updatePower(onOff) {
 
 def updateVolume(volume) {
   String absVolume = Math.abs(Integer.valueOf(volume)).toString()
-  sendEvent(name: "level", value: absVolume, displayed: false)
+  sendEvent(name: "level", value: absVolume, displayed: true)
 }
 
 def updatePlayPause(playpause) {
@@ -155,11 +155,11 @@ def updatePlayPause(playpause) {
       status = playpause
   }
 
-  sendEvent(name: "status", value: status, displayed: false)
+  sendEvent(name: "status", value: status, displayed: true)
 }
 
 def updateTrackDescription(trackDescription) {
-  sendEvent(name: "trackDescription", value: trackDescription, displayed: false)
+  sendEvent(name: "trackDescription", value: trackDescription, displayed: true)
 }
 /************
  * Commands *
