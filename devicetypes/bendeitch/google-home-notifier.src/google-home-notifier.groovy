@@ -18,6 +18,7 @@ metadata {
     attribute "serviceUrl", "string"
     
     command "speak", ["string"]
+    command "speakWith", ["string", "string"]
     command "playTrack", ["string", "number"]
     command "playTrackAtVolume", ["string", "number", "number"]
     command "playTrackAndResume", ["string", "number", "number"]
@@ -56,6 +57,11 @@ def speak(text) {
 	buildAction(text)
 }
 
+def speakWith(device, text) {
+	log.debug "Speaking (with ${device}): ${text}"
+	buildAction(text, device)
+}
+
 def playTrack(uri) {
   log.debug "Playing: ${uri}"
   buildAction(uri)
@@ -77,7 +83,7 @@ def playTrackAndResume(uri, duration, volume) {
   playTrack(uri)
 }
 
-def buildAction(text) {
+def buildAction(text, device = '') {
    
   def method = "POST"
     
@@ -85,7 +91,9 @@ def buildAction(text) {
   headers.put("HOST", settings.serviceHost)
   headers.put("Content-Type", "application/x-www-form-urlencoded")
     
-  def path = "/" + settings.servicePath
+  def path = "/" + settings.servicePath + "/" + URLEncoder.encode(device, 'UTF-8').replace('+','%20')
+  
+  log.debug(path)
   
   def action = new physicalgraph.device.HubAction(
     method: method,
