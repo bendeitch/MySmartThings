@@ -93,8 +93,6 @@ def buildAction(text, device = '') {
     
   def path = "/" + settings.servicePath + "/" + URLEncoder.encode(device, 'UTF-8').replace('+','%20')
   
-  log.debug(path)
-  
   def action = new physicalgraph.device.HubAction(
     method: method,
     headers: headers,
