@@ -93,7 +93,7 @@ def configure(serverHostAddress, playerMAC) {
 
 def processJsonMessage(msg) {
 
-  log.debug "Squeezebox Player Message [${device.name}]: ${msg}"
+  //log.debug "Squeezebox Player Message [${device.name}]: ${msg}"
 
   def command = msg.params[1][0]
 
@@ -124,7 +124,7 @@ def updatePower(onOff) {
 
   if (current != onOffString) {
 
-    log.debug "Squeezebox Player [${device.name}]: updating power: ${current} -> ${onOffString}"
+    //log.debug "Squeezebox Player [${device.name}]: updating power: ${current} -> ${onOffString}"
     sendEvent(name: "switch", value: onOffString, displayed: true)
     return true
  
@@ -292,7 +292,7 @@ def buildAction(params) {
     body: body
   )
 
-  log.debug "ACTION: ${action}"
+  //log.debug "ACTION: ${action}"
   
   action
 }
